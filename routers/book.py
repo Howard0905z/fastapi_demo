@@ -4,11 +4,11 @@ from database import get_db
 from models.book import Book
 from schemas.book import BookSchema,BookCreate, BookUpdate
 from typing import List, Optional
-from crud import book as crud
+from services.book_service import list_books_service,create_book_service
 
 router = APIRouter()
 
-# 1. POST /books
+"""# 1. POST /books
 @router.post("/books", response_model=BookSchema)
 def add_book(book: BookCreate, db: Session = Depends(get_db)):
     return crud.create_book(db, book)
@@ -30,3 +30,17 @@ def edit_book(book_id: int, update: BookUpdate, db: Session = Depends(get_db)):
     if not updated_book:
         raise HTTPException(status_code=404, detail="Book not found")
     return updated_book
+"""# 1. POST /books
+
+@router.post("/books", response_model=BookSchema)
+def add_book(book: BookCreate, db: Session = Depends(get_db)):
+    return create_book_service(db, book)
+
+@router.get("/books", response_model=List[BookSchema])
+def list_books(
+    skip: int = 0,
+    limit: int = 10,
+    author: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    return list_books_service(db, skip=skip, limit=limit, author=author)
