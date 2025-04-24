@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from routers import user, book,task, auth,admin
 from fastapi.middleware.cors import CORSMiddleware
+from middlewares.logging_middleware import LoggingMiddleware
+from core.logging_config import setup_logging
 
 app = FastAPI()
+setup_logging()
+app.add_middleware(LoggingMiddleware)
+
 
 # CORS 設定（如果你有前端要串）
 app.add_middleware(
